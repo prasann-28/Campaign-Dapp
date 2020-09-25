@@ -1,5 +1,16 @@
 pragma solidity 0.5.16;
 
+contract CampaignFactory{
+    address[] public deployedCampaigns;
+    function createCampaign(uint minimum) public {
+        address newCampaign = address( new Campaign(minimum, msg.sender));
+        deployedCampaigns.push(newCampaign);
+    }
+    function getDeployedCampaigns() public view returns (address[] memory){
+        return deployedCampaigns;
+    } 
+}
+
 contract Campaign{
     // Request defined but not implemented
     struct Request{
@@ -30,9 +41,9 @@ contract Campaign{
     }
 
     //constructor sets manager and defines minimum contribution
-    constructor() public {
-        manager = msg.sender;
-        minimumContribution = 0.1 ether;
+    constructor(uint _minimum, address _creator) public {
+        manager = _creator;
+        minimumContribution = _minimum;
     }
 
     function contribute() public payable {
